@@ -15,12 +15,6 @@ def render_address(address):
 	return address.replace(" Adresse :  ", "")
 
 class BougescraperItem(scrapy.Item):
-    # define the fields for your item here like:
-    name = scrapy.Field(input_processor = MapCompose(remove_tags), output_processor = TakeFirst())    
-    link = scrapy.Field(input_processor = MapCompose(remove_tags, make_url_absolute), output_processor = TakeFirst())
-    address = scrapy.Field(input_processor = MapCompose(remove_tags, render_address), output_processor = TakeFirst())
-
-class BougescraperItem2(scrapy.Item):
 
 	name = scrapy.Field(input_processor = MapCompose(remove_tags), output_processor = TakeFirst())
 	address = scrapy.Field(input_processor = MapCompose(remove_tags), output_processor = TakeFirst())
