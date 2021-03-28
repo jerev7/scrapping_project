@@ -13,7 +13,7 @@ def make_url_absolute(url):
 	return "http://www.treillieres.fr" + url
 
 def render_address(address):
-	return address.replace(" Adresse :  ", "")
+	return address.replace(",", "")
 
 def find_sports(paragraph):
 	sport_word_list = ["tennis", "basketball", "football", "boxe", "tennis de table", "rugby", "course", "lancers"]
@@ -31,4 +31,11 @@ class BougescraperItem(scrapy.Item):
 
 	name = scrapy.Field(input_processor = MapCompose(remove_tags), output_processor = TakeFirst())
 	address = scrapy.Field(input_processor = MapCompose(remove_tags), output_processor = TakeFirst())
-	sports = scrapy.Field(input_processor = MapCompose(remove_tags), output_processor = TakeFirst())
+	details = scrapy.Field(input_processor = MapCompose(remove_tags), output_processor = TakeFirst())
+
+class BougeGoogleScraperItem(scrapy.Item):
+	name = scrapy.Field()
+	address = scrapy.Field(input_processor=MapCompose(render_address))
+	gps_longitude = scrapy.Field()
+	gps_latitude = scrapy.Field()
+	general_type = scrapy.Field()
