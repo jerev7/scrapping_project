@@ -1,11 +1,11 @@
 import scrapy
-from bougescraper.items import BougescraperItem, BougescraperItem2
+from bougescraper.items import BougescraperItem
 from scrapy.loader import ItemLoader
-import regex
+import re
 
 
 #https://www.commune-mairie.fr/equipements/treillieres-44209/
-sport_word_list = ["tennis", "basketball", "football", "boxe", "tennis de table", "rugby"]
+sport_word_list = ["TENNIS", "BASCKETBALL", "FOOTBALL", "BOXE", "TENNIS DE TABLE", "RUGBY", "COURSES", "LANCERS"]
 
 
 class BougeSpider(scrapy.Spider):
@@ -20,7 +20,7 @@ class BougeSpider(scrapy.Spider):
             yield scrapy.Request(response.urljoin(link), callback=self.parse_detail)
 
     def parse_detail(self, response):
-
+        
         for equips in response.css("article.section-main"):
             sports_list = []
             l = ItemLoader(item=BougescraperItem(), selector=equips)
@@ -28,11 +28,12 @@ class BougeSpider(scrapy.Spider):
             l.add_css('address', 'p.list-infos__item.list-infos__address a')
             l.add_css('name', 'h1.heading__title::text')
 
-            for sport in sport_word_list:
-                if equips.css("p.list-infos__item.list-infos__infos::text").re(sport) is not None:
-                    sports_list.append(sport)
-            sports = ' '.join(sports_list)
-            l.add_value('sports', sports)
+            l.add_css("sports", "p.list-infos__item.list-infos__infos")
+            
+            # paragraph2 = paragraph.replace(',', ' , ').replace(".", " . ")
+            # paragraph2_in_list = paragraph2.split(' ')
+            # sport_list = [i for i in paragraph2_in_list if i in stop_words]
+
 
 
             yield l.load_item()
